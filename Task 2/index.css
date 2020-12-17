@@ -4,6 +4,7 @@
   flex-direction: row;
   justify-content: center;
 }
+
 #output-text {
   color: blue;
   font-size: larger;

@@ -1,0 +1,32 @@
+.body {
+  margin: 25px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+#wrapped {
+  width: 512px;
+  height: 512px;
+  background-image: url('image/image.jpg');
+  border: groove;
+}
+.element {
+  margin: 0;
+  z-index: 0;
+  background-color: rgb(46, 45, 45);
+  display: inline-block;
+  border-radius: 5px;
+  padding: 2px;
+  opacity: 0.7
+}
+
+.container-element {
+  position: absolute;
+  top: 138px;
+  right: 543px;
+}
+.movable-element1 {
+  z-index: 1; 
+  left: 200px; 
+  top: 300px;
+}
