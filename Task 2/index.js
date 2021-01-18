@@ -1,9 +1,11 @@
 const inputValue = document.getElementById('input');
 const outputValue = document.getElementById('output-text');
+let timer = null;
 
 inputValue.addEventListener('input', (event) => {
-  setTimeout(display, 5000)
-  function display() {
-    outputValue.innerHTML = event.target.value;
-  }
+  if (timer) clearTimeout(timer);
+
+  timer = setTimeout(() => {
+    outputValue.innerHTML = event.target.value 
+  }, 500 );
 })
