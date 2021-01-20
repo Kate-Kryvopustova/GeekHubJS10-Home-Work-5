@@ -1,52 +1,50 @@
-.container {
-  background-image: url('image/image.jpg');
-  background-repeat: no-repeat;
-  width: 512px;
-  height: 512px;
-  margin-left: auto;
-  margin-right: auto;
-  border: 1px solid black;
+body {
+  color: white;
   position: relative;
+  margin: 0 auto;
   -webkit-user-select: none;
 }
-.draggable {
-  cursor: pointer;
+
+.container {
+  margin-top: 15px;
 }
 
-.draggable-element__info {
-  color: white;
-  padding: 5px 15px;
+.tagging-wrapper {
+  background-image: url('image/image.jpg');
+  width: 512px;
+  height: 512px;
   border: 1px solid black;
+  position: relative;
+  margin: 0 auto;
+}
+
+.draggable-element {
+  position: absolute;
   border-radius: 5px;
   background-color: rgba(34, 34, 34, .75);
   opacity: .9;
-  cursor: pointer;
-  display: inline-block;
+  border: 1px solid #000;
+  cursor: pointer
 }
 
-.draggable-element__delete {
-  color: white;
+.draggable-element__info {
+  padding: 5px 15px;
+  display: inline-block;
+} 
+
+.delete {
+  top: -1px;
+  position: absolute;
   border: 1px solid black;
   padding: 5px;
   border-radius: 5px;
   background-color:  rgba(34, 34, 34, .75);
-  cursor: pointer;
+} 
+
+.hide {
   visibility: hidden;
 }
 
-.first-position {
-  position: absolute;
-  top: 100px;
-  left: 100px;
-}
-.second-position {
-  position: absolute;
-  top: 200px;
-  left: 200px;
-
-}
-.third-position {
-  position: absolute;
-  top: 300px;
-  left: 200px;
+.move-left {
+  right: 100%
 }

@@ -1,61 +1,103 @@
 const dragElement = document.querySelectorAll('.draggable-element');
 const dragElementInfo = document.querySelectorAll('.draggable-element__info');
-const deleteElement = document.querySelectorAll('.draggable-element__delete');
-const containerForElements = document.querySelector('.container');
-
+const deleteElement = document.querySelectorAll('.delete');
+const container = document.querySelector('.tagging-wrapper');
+let dragItem = {};
 
 dragElementInfo.forEach((element, index) => element.addEventListener('click', () => {
+
   deleteElement.forEach((item, indexElement) => {
     if (index === indexElement) {
       item.style.visibility = 'visible';
     } else {
       item.style.visibility = 'hidden';
     }
-  })
+  });
+
+  dragElement.forEach((element, indexItem) => {
+    if (indexItem === index) {
+      element.classList.add('dragElement');
+    } else {
+      element.classList.remove('dragElement');
+    }
+  });
+
 }));
 
 deleteElement.forEach((item) => {
   item.addEventListener('click', (event) => {
     event.target.parentNode.remove();
-  })
+  });
 });
 
-dragElement.forEach((element) => {
-  element.addEventListener('mousedown', (event) => {
-    if (event.which != 1) return;
-    element.style.zIndex = 50;
-    
-    let marginLeft = containerForElements.getBoundingClientRect().left;
-    let marginTop = containerForElements.getBoundingClientRect().top;
-    let moveX = event.pageX - marginLeft;
-    let moveY = event.pageY - marginTop;
+function createDragItem() {
+  const item = dragItem.elem;
 
-    moveAt(moveX, moveY)
+  return item;
+}
 
-    function moveAt(pageX, pageY) {
-      let coordsLeft = pageX - element.offsetWidth / 2;
-      let coordsTop = pageY - element.offsetHeight / 2;
+function mouseDown(event) {
+  const draggedElement = event.target.closest('.dragElement');
 
-      if (coordsLeft >= 0 && coordsLeft <= (element.parentNode.offsetWidth - element.offsetWidth)) {
-        element.style.left = coordsLeft + 'px';
-      }
-      if (coordsTop >= 0 && coordsTop <= (element.parentNode.offsetHeight - element.offsetHeight)) {
-        element.style.top = coordsTop + 'px';
-      }
-    }
+  if (event.which !== 1) return;
+  if (!draggedElement) return;
 
-    function onMouseMove(event) {
-      moveAt(event.pageX - marginLeft, event.pageY - marginTop);
-    }
+  dragItem.elem = draggedElement;
+  dragItem.downX = event.pageX;
+  dragItem.downY = event.pageY;
+}
 
-    document.addEventListener('mousemove', onMouseMove);
+function mouseMove(event) {
+  if (!dragItem.elem) return;
+  if (!dragItem.item) {
 
-    element.addEventListener('mouseup', function () {
-      document.removeEventListener('mousemove', onMouseMove);
-      element.style.zIndex = 10;
-    })
-  })
-})
+    dragItem.item = createDragItem(event);
 
+    let coordsLeft = dragItem.item.getBoundingClientRect().left + pageXOffset;
+    let coordsTop = dragItem.item.getBoundingClientRect().top + pageYOffset;
 
+    dragItem.shiftX = dragItem.downX - coordsLeft;
+    dragItem.shiftY = dragItem.downY - coordsTop;
 
+    startDrag();
+  }
+
+  const rightCoordinates = container.getBoundingClientRect().right - 2;
+  const leftCoordinates = container.getBoundingClientRect().left;
+  const topCoordinates = container.getBoundingClientRect().top - 14;
+  const bottomCoordinates = container.getBoundingClientRect().bottom - 17;
+  const buttonDelete = dragItem.elem.querySelector('.delete');
+
+  let coordinatesX = event.pageX - dragItem.shiftX;
+  let coordinatesY = event.pageY - dragItem.shiftY;
+
+  coordinatesX = Math.min(coordinatesX, rightCoordinates - dragItem.item.clientWidth);
+  coordinatesX = Math.max(coordinatesX, leftCoordinates);
+
+  coordinatesY = Math.min(coordinatesY, bottomCoordinates - dragItem.item.clientHeight);
+  coordinatesY = Math.max(coordinatesY, topCoordinates);
+
+  dragItem.item.style.left = coordinatesX + 'px';
+  dragItem.item.style.top = coordinatesY + 'px';
+
+  if (parseInt(dragItem.item.style.left) > (rightCoordinates - dragItem.item.clientWidth - buttonDelete.clientWidth)) {
+    buttonDelete.classList.add('move-left');
+  } else {
+    buttonDelete.classList.remove('move-left');
+  }
+
+}
+
+function mouseUp() {
+  dragItem = {};
+}
+
+function startDrag() {
+  document.body.appendChild(dragItem.elem);
+  dragItem.elem.style.zIndex = 1;
+  dragItem.elem.style.position = 'absolute';
+}
+
+document.onmousemove = mouseMove;
+document.onmouseup = mouseUp;
+document.onmousedown = mouseDown;
